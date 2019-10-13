@@ -1,4 +1,4 @@
-package com.heady.assessment.ui
+package com.heady.assessment.ui.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.heady.assessment.R
-import com.heady.assessment.view.MainView
+import com.heady.assessment.view.main.MainView
 
 class MainFragment : Fragment(), MainView {
 

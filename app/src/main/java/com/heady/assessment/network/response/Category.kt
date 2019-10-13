@@ -1,4 +1,9 @@
 package com.heady.assessment.network.response
+
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 /*
@@ -12,11 +17,22 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 
+@Entity
+data class Category(
 
-data class Categories(
+    @PrimaryKey
+    @SerializedName("id")
+    val id: Int,
 
-    @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String,
-    @SerializedName("products") val products: List<Products>,
-    @SerializedName("child_categories") val child_categories: List<String>
+    @ColumnInfo(name = "name")
+    @SerializedName("name")
+    val name: String,
+
+    @Embedded
+    @SerializedName("products")
+    val products: List<Product>,
+
+    @Embedded
+    @SerializedName("child_categories")
+    val child_categories: List<String>
 )

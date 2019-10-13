@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Heady Assessment</string>
+    <string name="fetching_data">Fetching data from server please wait...</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.heady.assessment.presenter
+package com.heady.assessment.presenter.main
 
 import com.heady.assessment.view.main.MainView
 

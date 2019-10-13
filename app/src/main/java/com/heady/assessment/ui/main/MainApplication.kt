@@ -1,4 +1,4 @@
-package com.heady.assessment.ui
+package com.heady.assessment.ui.main
 
 import android.app.Application
 

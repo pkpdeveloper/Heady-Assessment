@@ -1,4 +1,7 @@
 package com.heady.assessment.network.response
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
 /*
@@ -12,9 +15,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 
+@Entity
+data class Ranking(
 
-data class Rankings(
+    @ColumnInfo(name = "ranking")
+    @SerializedName("ranking")
+    val ranking: String,
 
-    @SerializedName("ranking") val ranking: String,
-    @SerializedName("products") val products: List<Products>
+    @ColumnInfo(name = "products")
+    @SerializedName("products")
+    val products: List<Product>
 )

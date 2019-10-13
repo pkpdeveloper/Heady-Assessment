@@ -1,4 +1,8 @@
 package com.heady.assessment.network.response
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 /*
@@ -12,11 +16,22 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 
+@Entity
+data class Variant(
 
-data class Variants(
+    @PrimaryKey
+    @SerializedName("id")
+    val id: Int,
 
-    @SerializedName("id") val id: Int,
-    @SerializedName("color") val color: String,
-    @SerializedName("size") val size: Int,
-    @SerializedName("price") val price: Int
+    @ColumnInfo(name = "color")
+    @SerializedName("color")
+    val color: String,
+
+    @ColumnInfo(name = "size")
+    @SerializedName("size")
+    val size: Int,
+
+    @ColumnInfo(name = "price")
+    @SerializedName("price")
+    val price: Int
 )
