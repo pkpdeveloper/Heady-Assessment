@@ -7,6 +7,7 @@ buildscript {
     ext.recyclerviewVersion = '1.0.0'
     ext.cardviewVersion = '1.0.0'
     ext.daggerVersion = '2.13'
+    ext.materialVersion = '1.1.0-beta01'
 
     repositories {
         google()
