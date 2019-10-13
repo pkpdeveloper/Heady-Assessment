@@ -69,7 +69,12 @@ dependencies {
     Dagger dependency injection library : https://github.com/google/dagger
 */
     implementation "com.google.dagger:dagger:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"/*
+
+ /*
+    Material Components for Android : https://github.com/material-components/material-components-android
+*/
+    implementation "com.google.android.material:material:$materialVersion"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
