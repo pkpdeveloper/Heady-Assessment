@@ -1,7 +1,8 @@
-package com.heady.assessment
+package com.heady.assessment.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.heady.assessment.R
 
 class MainActivity : AppCompatActivity() {
 
