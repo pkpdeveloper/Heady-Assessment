@@ -51,7 +51,11 @@ class VariantAdapter(private val variants: List<Variant>) :
             "Yellow" -> ColorDrawable(Color.YELLOW)
             "Grey" -> ColorDrawable(Color.GRAY)
             "Light Blue" -> ColorDrawable(Color.parseColor("#ADD8E6"))
-            else -> ColorDrawable(Color.RED)
+            "Brown" -> ColorDrawable(Color.parseColor("#A52A2A"))
+            "Green" -> ColorDrawable(Color.GREEN)
+            "Silver" -> ColorDrawable(Color.parseColor("#C0C0C0"))
+            "Golden" -> ColorDrawable(Color.parseColor("#D4AF37"))
+            else -> throw IllegalArgumentException("Color name not mapped for $color")
         }
     }
 

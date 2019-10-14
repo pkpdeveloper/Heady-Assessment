@@ -78,6 +78,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         responseData?.let { data ->
             if (item.groupId == 0) {
+                val productList = mutableListOf<Product>()
+                data.categories.forEach {
+                    productList.addAll(it.products)
+                }
+                changeFragment("All Categories", productList)
+            }
+
+            if (item.groupId == 1) {
                 data.rankings.forEach { ranking ->
                     if (ranking.ranking.length == item.itemId) {
                         val productList = mutableListOf<Product>()
@@ -92,7 +100,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
 
-            if (item.groupId == 1) {
+            if (item.groupId == 2) {
                 data.categories.forEach {
                     if (it.id == item.itemId) {
                         changeFragment(it.name ?: "Unknown category", it.products)
@@ -135,13 +143,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun displayData(responseData: ResponseData) {
         this.responseData = responseData
+
+        navigationView.menu.add(0, 1, 0, "Home")
+
         responseData.rankings.forEach {
-            navigationView.menu.add(0, it.ranking.length, 0, it.ranking)
+            navigationView.menu.add(1, it.ranking.length, 0, it.ranking)
         }
         val productList = mutableListOf<Product>()
 
         responseData.categories.forEach {
-            navigationView.menu.add(1, it.id, 0, it.name)
+            navigationView.menu.add(2, it.id, 0, it.name)
             productList.addAll(it.products)
         }
         changeFragment("All Categories", productList)
