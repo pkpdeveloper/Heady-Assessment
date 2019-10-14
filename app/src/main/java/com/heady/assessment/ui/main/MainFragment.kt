@@ -5,16 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.heady.assessment.R
 import com.heady.assessment.network.response.Product
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-class MainFragment : Fragment() {
+class MainFragment : DaggerFragment() {
     private lateinit var recycleView: RecyclerView
     private lateinit var emptyTextView: TextView
-    private val productAdapter = ProductAdapter()
+    @Inject
+    internal lateinit var productAdapter: ProductAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
