@@ -3,6 +3,7 @@ package com.heady.assessment.ui.main
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.view.Gravity
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.heady.assessment.R
 import com.heady.assessment.data.DataManager
+import com.heady.assessment.network.response.Product
 import com.heady.assessment.network.response.ResponseData
 import com.heady.assessment.presenter.main.MainPresenter
 import com.heady.assessment.presenter.main.MainPresenterImpl
@@ -23,7 +25,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var navigationView: NavigationView
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerToggle: ActionBarDrawerToggle
-
+    private var responseData: ResponseData? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,10 +36,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setUpToolBar()
         presenter.setView(this)
         presenter.loadData(DataManager.getDataBase())
-
-        supportFragmentManager.beginTransaction()
-            .add(R.id.container, MainFragment())
-            .commit()
     }
 
     private fun setUpToolBar() {
@@ -78,17 +76,75 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        responseData?.let { data ->
+            if (item.groupId == 0) {
+                data.rankings.forEach { ranking ->
+                    if (ranking.ranking.length == item.itemId) {
+                        val productList = mutableListOf<Product>()
+                        ranking.products.forEach { product ->
+                            findProduct(product.id)?.also {
+                                productList.add(it)
+                            }
+
+                        }
+                        changeFragment(ranking.ranking, productList)
+                    }
+                }
+            }
+
+            if (item.groupId == 1) {
+                data.categories.forEach {
+                    if (it.id == item.itemId) {
+                        changeFragment(it.name ?: "Unknown category", it.products)
+                    }
+                }
+            }
+        }
+
         return false
     }
 
-    override fun displayData(responseData: ResponseData) {
-        responseData.rankings.forEach {
-            val menuItem = navigationView.menu.add(0, 0, 0, it.ranking)
-        }
-        responseData.categories.forEach {
-            val menuItem = navigationView.menu.add(1, it.id, 0, it.name)
-        }
+    private fun findProduct(productId: Int): Product? {
+        responseData?.let { data ->
+            data.categories.forEach { category ->
+                category.products.forEach {
+                    if (it.id == productId) {
+                        return it
+                    }
+                }
 
+            }
+        }
+        return null
+    }
+
+    private fun changeFragment(title: String, products: List<Product>) {
+        val bundle = Bundle()
+        bundle.putString("title", title)
+        bundle.putParcelableArrayList(
+            "product_list",
+            ArrayList(products)
+        )
+        val fragment = MainFragment()
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, fragment)
+            .commit()
+        drawerLayout.closeDrawer(Gravity.LEFT)
+    }
+
+    override fun displayData(responseData: ResponseData) {
+        this.responseData = responseData
+        responseData.rankings.forEach {
+            navigationView.menu.add(0, it.ranking.length, 0, it.ranking)
+        }
+        val productList = mutableListOf<Product>()
+
+        responseData.categories.forEach {
+            navigationView.menu.add(1, it.id, 0, it.name)
+            productList.addAll(it.products)
+        }
+        changeFragment("All Categories", productList)
     }
 
     override fun onError() {

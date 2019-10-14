@@ -13,12 +13,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolBar"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
-            app:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar" />
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
+                app:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar" />
+
+        </com.google.android.material.appbar.AppBarLayout>
 
         <FrameLayout
             android:id="@+id/container"

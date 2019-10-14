@@ -1,5 +1,7 @@
 package com.heady.assessment.network.response
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -25,13 +27,49 @@ data class Product(
 
     @ColumnInfo(name = "name")
     @SerializedName("name")
-    val name: String,
+    val name: String?,
 
     @ColumnInfo(name = "date_added")
     @SerializedName("date_added")
-    val date_added: String,
+    val date_added: String?,
 
     @ColumnInfo(name = "variants")
     @SerializedName("variants")
-    val variants: List<Variant>
-)
+    val variants: List<Variant>?,
+
+    @ColumnInfo(name = "view_count")
+    @SerializedName("view_count")
+    val view_count: Int?
+
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readString(),
+        parcel.readString(),
+        TODO("variants"),
+        parcel.readValue(Int::class.java.classLoader) as? Int
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeString(name)
+        parcel.writeString(date_added)
+        parcel.writeValue(view_count)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Product> {
+        override fun createFromParcel(parcel: Parcel): Product {
+            return Product(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Product?> {
+            return arrayOfNulls(size)
+        }
+    }
+
+
+}
