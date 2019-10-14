@@ -23,7 +23,15 @@ data class Product(
     @SerializedName("id")
     val id: Int,
 
-    @ColumnInfo(name = "view_count")
-    @SerializedName("view_count")
-    val view_count: Int
+    @ColumnInfo(name = "name")
+    @SerializedName("name")
+    val name: String,
+
+    @ColumnInfo(name = "date_added")
+    @SerializedName("date_added")
+    val date_added: String,
+
+    @ColumnInfo(name = "variants")
+    @SerializedName("variants")
+    val variants: List<Variant>
 )

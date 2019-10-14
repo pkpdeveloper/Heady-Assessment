@@ -26,7 +26,7 @@ data class Category(
 
     @ColumnInfo(name = "name")
     @SerializedName("name")
-    val name: String,
+    val name: String?,
 
     @Embedded
     @SerializedName("products")

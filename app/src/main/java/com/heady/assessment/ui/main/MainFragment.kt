@@ -6,11 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.heady.assessment.R
-import com.heady.assessment.view.main.MainView
 
-class MainFragment : Fragment(), MainView {
-
-
+class MainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -21,6 +18,5 @@ class MainFragment : Fragment(), MainView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-     //   presenter.setView(this)
     }
 }

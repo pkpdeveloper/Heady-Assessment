@@ -30,7 +30,6 @@ class SplashFragment : Fragment(), SplashView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         progressBar = view.findViewById(R.id.progressBar)
-        this.context?.let { DataManager.init(it) }
         presenter.setView(this)
         presenter.fetchData(ApiManager.getService())
     }
@@ -49,7 +48,6 @@ class SplashFragment : Fragment(), SplashView {
     }
 
     override fun onDataStored(responseData: ResponseData) {
-
         Intent(activity, MainActivity::class.java).apply {
             startActivity(this)
             activity?.finish()

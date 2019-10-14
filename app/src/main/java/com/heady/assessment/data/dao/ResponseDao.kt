@@ -12,7 +12,7 @@ interface ResponseDao {
     @Insert(onConflict = REPLACE)
     fun insertAll(responseData: ResponseData): Single<Long>
 
-    @Query("SELECT * FROM response_data WHERE id=1")
+    @Query("SELECT * FROM response_data")
     fun getData(): Single<ResponseData>
 
 
