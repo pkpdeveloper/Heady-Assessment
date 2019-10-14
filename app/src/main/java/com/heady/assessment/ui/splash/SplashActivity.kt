@@ -1,10 +1,10 @@
 package com.heady.assessment.ui.splash
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.heady.assessment.R
+import dagger.android.support.DaggerAppCompatActivity
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

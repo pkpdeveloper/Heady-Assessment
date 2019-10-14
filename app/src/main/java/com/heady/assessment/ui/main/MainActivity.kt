@@ -6,21 +6,25 @@ import android.os.PersistableBundle
 import android.view.Gravity
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.heady.assessment.R
-import com.heady.assessment.data.DataManager
+import com.heady.assessment.data.AppDatabase
+import com.heady.assessment.network.ApiService
 import com.heady.assessment.network.response.Product
 import com.heady.assessment.network.response.ResponseData
 import com.heady.assessment.presenter.main.MainPresenter
-import com.heady.assessment.presenter.main.MainPresenterImpl
 import com.heady.assessment.view.main.MainView
+import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     MainView {
-    private val presenter: MainPresenter = MainPresenterImpl()
+    @Inject
+    internal lateinit var presenter: MainPresenter
+    @Inject
+    internal lateinit var appDatabase: AppDatabase
     private lateinit var toolBar: Toolbar
     private lateinit var navigationView: NavigationView
     private lateinit var drawerLayout: DrawerLayout
@@ -35,7 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         setUpToolBar()
         presenter.setView(this)
-        presenter.loadData(DataManager.getDataBase())
+        presenter.loadData(appDatabase)
     }
 
     private fun setUpToolBar() {
