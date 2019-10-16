@@ -10,8 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.heady.assessment.R
-import com.heady.assessment.data.AppDatabase
-import com.heady.assessment.network.ApiService
+import com.heady.assessment.data.SyncManager
 import com.heady.assessment.network.response.Product
 import com.heady.assessment.network.response.ResponseData
 import com.heady.assessment.presenter.main.MainPresenter
@@ -24,7 +23,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     @Inject
     internal lateinit var presenter: MainPresenter
     @Inject
-    internal lateinit var appDatabase: AppDatabase
+    internal lateinit var syncManager: SyncManager
     private lateinit var toolBar: Toolbar
     private lateinit var navigationView: NavigationView
     private lateinit var drawerLayout: DrawerLayout
@@ -39,7 +38,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         setUpToolBar()
         presenter.setView(this)
-        presenter.loadData(appDatabase)
+        presenter.loadData(syncManager)
     }
 
     private fun setUpToolBar() {

@@ -1,7 +1,6 @@
 package com.heady.assessment.presenter.splash
 
-import com.heady.assessment.data.AppDatabase
-import com.heady.assessment.network.ApiService
+import com.heady.assessment.data.SyncManager
 import com.heady.assessment.network.response.ResponseData
 import com.heady.assessment.view.splash.SplashView
 import io.reactivex.SingleObserver
@@ -15,8 +14,8 @@ class SplashPresenterImpl : SplashPresenter {
         this.view = splashView
     }
 
-    override fun fetchData(apiService: ApiService) {
-        apiService.getData().subscribeOn(Schedulers.io())
+    override fun fetchData(syncManger: SyncManager) {
+        syncManger.getData().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : SingleObserver<ResponseData> {
                 override fun onSuccess(responseData: ResponseData) {
@@ -35,23 +34,5 @@ class SplashPresenterImpl : SplashPresenter {
             })
 
 
-    }
-
-    override fun storeData(appDatabase: AppDatabase, responseData: ResponseData) {
-        appDatabase.responseDao().insertAll(responseData).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : SingleObserver<Long> {
-                override fun onSuccess(value: Long) {
-                    view.onDataStored(responseData)
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                }
-
-                override fun onError(e: Throwable) {
-                    view.onError()
-                }
-
-            })
     }
 }
