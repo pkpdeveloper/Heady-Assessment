@@ -56,6 +56,6 @@ class SplashFragment : DaggerFragment(), SplashView {
     }
 
     override fun onError() {
-        labelTextView.text = "Unable to start the application please check Internet connection"
+        labelTextView.text = "Unable to proceed, Please check Internet connection"
     }
 }

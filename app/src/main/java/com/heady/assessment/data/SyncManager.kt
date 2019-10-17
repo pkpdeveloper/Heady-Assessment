@@ -5,6 +5,7 @@ import com.heady.assessment.network.ApiService
 import com.heady.assessment.network.response.ResponseData
 import com.heady.assessment.util.NetworkUtil
 import io.reactivex.Single
+import java.lang.ref.WeakReference
 
 class SyncManager(
     private val apiService: ApiService,
@@ -12,29 +13,33 @@ class SyncManager(
     private val context: Context
 ) {
 
-    private var cacheResponseData: ResponseData? = null
+    companion object {
+        private var cacheResponseData: WeakReference<ResponseData>? = null
+    }
 
     fun getData(): Single<ResponseData> {
         val networkObservable = apiService.getData().doAfterSuccess {
             // put copy of data in cache
-            this.cacheResponseData = it
+            cacheResponseData?.clear()
+            cacheResponseData = WeakReference(it)
 
             // store copy of data in database
-            appDatabase.responseDao().insertAll(it)
+            appDatabase.responseDao().insertAll(it).subscribe()
         }
         val dataBaseObservable = appDatabase.responseDao().getData().doAfterSuccess {
             // put copy of data in cache
-            this.cacheResponseData = it
+            cacheResponseData?.clear()
+            cacheResponseData = WeakReference(it)
         }
         return when {
             // Select default Cache Observable
-            cacheResponseData != null -> getCacheDataObservable()
+            cacheResponseData?.get() != null -> getCacheDataObservable()
 
             // Select network Observable when connected with internet and cacheData is null
-            cacheResponseData == null && NetworkUtil.isConnectedWithInternet(context) -> networkObservable
+            cacheResponseData?.get() == null && NetworkUtil.isConnectedWithInternet(context) -> networkObservable
 
             // Select database Observable when not connected with internet and cacheData is null
-            cacheResponseData == null && !NetworkUtil.isConnectedWithInternet(context) -> dataBaseObservable
+            cacheResponseData?.get() == null && !NetworkUtil.isConnectedWithInternet(context) -> dataBaseObservable
             else -> getCacheDataObservable()
         }
     }
@@ -42,8 +47,8 @@ class SyncManager(
     private fun getCacheDataObservable(): Single<ResponseData> {
         return Single.create<ResponseData> {
             // cache data found return it as result
-            if (cacheResponseData != null && !it.isDisposed) {
-                cacheResponseData?.let { data ->
+            if (cacheResponseData?.get() != null && !it.isDisposed) {
+                cacheResponseData?.get()?.let { data ->
                     it.onSuccess(data)
                 }
             } else if (!it.isDisposed) {
