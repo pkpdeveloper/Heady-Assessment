@@ -39,7 +39,12 @@ data class Product(
 
     @ColumnInfo(name = "view_count")
     @SerializedName("view_count")
-    val view_count: Int?
+    val view_count: Int?,
+
+    @ColumnInfo(name = "tax")
+    @SerializedName("tax")
+    val tax: Tax?
+
 
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
@@ -47,8 +52,10 @@ data class Product(
         parcel.readString(),
         parcel.readString(),
         TODO("variants"),
-        parcel.readValue(Int::class.java.classLoader) as? Int
-    )
+        parcel.readValue(Int::class.java.classLoader) as? Int,
+        TODO("tax")
+    ) {
+    }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)

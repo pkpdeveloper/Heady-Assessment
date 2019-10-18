@@ -4,27 +4,31 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.Gravity
+import android.view.Menu
 import android.view.MenuItem
+import android.view.SubMenu
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.heady.assessment.R
-import com.heady.assessment.data.AppDatabase
-import com.heady.assessment.network.ApiService
+import com.heady.assessment.data.SyncManager
+import com.heady.assessment.network.response.Category
 import com.heady.assessment.network.response.Product
 import com.heady.assessment.network.response.ResponseData
 import com.heady.assessment.presenter.main.MainPresenter
+import com.heady.assessment.util.CategoryManager
 import com.heady.assessment.view.main.MainView
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
+
 
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     MainView {
     @Inject
     internal lateinit var presenter: MainPresenter
     @Inject
-    internal lateinit var appDatabase: AppDatabase
+    internal lateinit var syncManager: SyncManager
     private lateinit var toolBar: Toolbar
     private lateinit var navigationView: NavigationView
     private lateinit var drawerLayout: DrawerLayout
@@ -39,7 +43,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         setUpToolBar()
         presenter.setView(this)
-        presenter.loadData(appDatabase)
+        presenter.loadData(syncManager)
     }
 
     private fun setUpToolBar() {
@@ -153,13 +157,37 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         responseData.rankings.forEach {
             navigationView.menu.add(1, it.ranking.length, 0, it.ranking)
         }
-        val productList = mutableListOf<Product>()
+        val sortedCategory = CategoryManager.getSortedByLevel(responseData.categories)
+        displayMenuItems(sortedCategory)
+        changeFragment("All Products", CategoryManager.getAllProducts(responseData.categories))
+    }
 
-        responseData.categories.forEach {
-            navigationView.menu.add(2, it.id, 0, it.name)
-            productList.addAll(it.products)
+    private fun displayMenuItems(sortedCategoryList: List<Category>) {
+        sortedCategoryList.forEach {
+            val subMenu = navigationView.menu.addSubMenu(2, it.id, 0, it.name)
+            recursiveAddMenu(subMenu, it, responseData?.categories)
         }
-        changeFragment("All Categories", productList)
+    }
+
+    private fun recursiveAddMenu(
+        subMenu: SubMenu,
+        category: Category,
+        categoryList: List<Category>?
+    ) {
+        category.child_categories.map { CategoryManager.getCategoryFromId(it, categoryList) }
+            .forEach {
+                it?.let {
+                    if (it.products.isNotEmpty() && it.child_categories.isEmpty()) {
+                        subMenu.add(2, it.id, Menu.NONE, it.name)
+                    } else if (it.child_categories.isEmpty()) {
+                        subMenu.add(2, it.id, Menu.NONE, it.name)
+                    } else {
+                        subMenu.addSubMenu(category.id, it.id, Menu.NONE, it.name)
+                    }
+
+                    recursiveAddMenu(subMenu, it, categoryList)
+                }
+            }
     }
 
     override fun onError() {
