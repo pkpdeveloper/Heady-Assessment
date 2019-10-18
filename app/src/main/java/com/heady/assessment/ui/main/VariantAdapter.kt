@@ -10,9 +10,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.heady.assessment.R
+import com.heady.assessment.network.response.Product
 import com.heady.assessment.network.response.Variant
 
-class VariantAdapter(private val variants: List<Variant>) :
+class VariantAdapter(private val product: Product, private val variants: List<Variant>) :
     RecyclerView.Adapter<VariantAdapter.VariantHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VariantHolder {
         return VariantHolder(
@@ -31,7 +32,14 @@ class VariantAdapter(private val variants: List<Variant>) :
     override fun onBindViewHolder(holder: VariantHolder, position: Int) {
         val variant = variants[position]
         variant.let {
-            holder.tvPrice.text = "Price : - ${it.price}"
+            val priceStringBuilder = StringBuilder()
+            priceStringBuilder.append("Base price :- ${it.price}\n")
+            product.tax?.let { tax ->
+                val taxCount = it.price * tax.value / 100.0f
+                priceStringBuilder.append("${tax.name} :- $taxCount\n")
+                priceStringBuilder.append("Total price :- ${it.price + taxCount}")
+            }
+            holder.tvPrice.text = priceStringBuilder
             holder.tvSize.text = "Size : - ${it.size}"
             val bgColor = getColorDrawable(it.color)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

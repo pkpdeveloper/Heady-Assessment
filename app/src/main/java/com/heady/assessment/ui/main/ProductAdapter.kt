@@ -31,8 +31,8 @@ class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ProductHolder>() {
             holder.tvTitle.text = it.name
             holder.variantRecycleView.apply {
                 it.variants?.let {
-                    layoutManager = GridLayoutManager(this.context, 3)
-                    adapter = VariantAdapter(it)
+                    layoutManager = GridLayoutManager(this.context, 2)
+                    adapter = VariantAdapter(product,it)
                 }
             }
 
